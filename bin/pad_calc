@@ -1,0 +1,98 @@
+#!/usr/bin/env ruby
+#
+# (c)2014 akagi takashi
+#
+
+require 'pazzdra'
+require "pry"
+
+module Pazzdra
+  extend self
+
+  def run()
+    start
+  end
+
+  def start
+    init
+    print <<EOS
+  pazzdra calc ver.#{Pazzdra::VERSION}
+   > help!
+EOS
+    pry
+  end
+
+  private
+  def init
+    @base = Pazzdra::Calc.new
+  end
+
+  Pazzdra::Calc.DEFAULT_BASE.keys.each do |key|
+    define_method key do |val=nil|
+      @base.merge({ key => val }) if val && val > 0
+      @base.data[key]
+    end
+  end
+
+  [:red, :green, :blue, :yellow, :purple].each do |key_color|
+    key = key_color.to_s[0].to_sym
+    combo_method_names = ["combo_#{key_color}".to_sym, "combo_#{key}".to_sym]
+    define_method combo_method_names[0] do |val=nil|
+      @base.data[:combo] = {} if !@base.data[:combo] || @base.data[:combo].is_a?(Numeric)
+      @base.data[:combo][key] = val if val
+      @base.data[:combo][key]
+    end
+    alias_method combo_method_names[1].to_sym, combo_method_names[0].to_sym
+  end
+
+  [*1..6].each do |key|
+    base_method_names = "base_#{key}".to_sym
+    define_method base_method_names do |val=nil|
+      @base.data[:base] = [] if !@base.data[:base] || @base.data[:base].is_a?(Numeric)
+      @base.data[:base][key-1] = val if val
+      @base.data[:base][key-1]
+    end
+  end
+
+  def show
+    @base.show
+  end
+
+  def help!
+    print <<EOS
+# -----
+> init  # 入力されたデータを破棄して初期化します
+
+# 設定
+> base 99   # 単に数字の場合は1つの値のみ計算
+> base_1 〜 base_6 color: 99, sub: :color
+            # 1〜6 の数字で、複数のキャラクターの能力値を指定可能
+            # color: は r: g: b: y: p: h: で各色を指定、副属性がある場合は sub: :color で色を指定
+            # exp: キャラ1 火属性で攻撃力1000、副属性木。キャラ2 光属性で攻撃力880、副属性闇の場合
+            #  > base_1 r: 1000, sub: :g
+            #  > base_2 y: 880, sub: :p
+> leader 99 # リーダースキルによる倍率
+> friend 99 # フレンドスキルによる倍率
+> skill 99  # その他スキルによる倍率
+> combo_red [ 99, ... ]    # 火属性のコンボ設定 数字カンマ区切りで何個でも。数字は同時消しの数
+                           # 3個を1つ、4個を1つ消したら [3,4] となる 略式: combo_r
+> combo_green [ 99, ... ]  # 木属性のコンボ設定 以下同文 略式: combo_g
+> combo_blue [ 99, ... ]   # 水属性のコンボ設定 以下同文 略式: combo_b
+> combo_yellow [ 99, ... ] # 光属性のコンボ設定 以下同文 略式: combo_y
+> combo_purple [ 99, ... ] # 闇属性のコンボ設定 以下同文 略式: combo_p
+# 結果確認
+> show  # 計算結果を表示します
+
+# 終了
+> exit  # 終了します
+# -----
+EOS
+  end
+end
+
+if ARGV.count >= 1
+  base_pw = ARGV[0].to_i
+  puts Pazzdra::Calc.cal(base_pw ,ARGV[1] ,ARGV[2] ,ARGV[3])
+else
+  Pazzdra.run
+end
