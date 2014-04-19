@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["nisyu@mac.com"]
   spec.summary       = %q{PAZZRU & DRAGONS calc.}
   spec.description   = %q{PAZZRU & DRAGONS calc.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/majosystems/pazzdra"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
