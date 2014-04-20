@@ -65,6 +65,10 @@ describe Pazzdra, "パズドラ各種計算アプリ" do
           @calc.merge({ base: [{g: 1200, sub: :g},{y: 1234, sub: :r}], leader: 2.5, friend: 2, skill: 1.5, combo: {r: [3, 3], g: [3,4], b: [3], y: [4, 6] } })
           should eq [{g: 50625, sub: {g: 25313}},{y: 69413, sub: {r: 23138}}]
         end
+        it "ベースの色指定、コンボ色指定 攻撃色が複数、長さ4越え 複数、強化ドロップあり" do
+          @calc.merge({ base: [{g: 1200, sub: :g},{y: 1234, sub: :r}], leader: 2.5, friend: 2, skill: 1.5, combo: {r: [3, 3], g: [3,4], b: [3], y: [4, 6] }, plus_drop: {g: 4} })
+          should eq [{g: 62775, sub: {g: 31388}},{y: 69413, sub: {r: 23138}}]
+        end
       end
     end
   end

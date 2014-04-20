@@ -43,6 +43,13 @@ EOS
       @base.data[:combo][key]
     end
     alias_method combo_method_names[1].to_sym, combo_method_names[0].to_sym
+    plus_method_names = ["plus_drop_#{key_color}".to_sym, "plus_drop_#{key}".to_sym]
+    define_method plus_method_names[0] do |val=nil|
+      @base.data[:plus_drop] = {} if !@base.data[:plus_drop] || @base.data[:plus_drop].is_a?(Numeric)
+      @base.data[:plus_drop][key] = val if val
+      @base.data[:plus_drop][key]
+    end
+    alias_method plus_method_names[1].to_sym, plus_method_names[0].to_sym
   end
 
   [*1..6].each do |key|
@@ -74,6 +81,7 @@ EOS
 > leader 99 # リーダースキルによる倍率
 > friend 99 # フレンドスキルによる倍率
 > skill 99  # その他スキルによる倍率
+> plus_drop 99 or color: 99, ... # 強化ドロップの数。数値もしくは色指定と数値
 > combo_red [ 99, ... ]    # 火属性のコンボ設定 数字カンマ区切りで何個でも。数字は同時消しの数
                            # 3個を1つ、4個を1つ消したら [3,4] となる 略式: combo_r
 > combo_green [ 99, ... ]  # 木属性のコンボ設定 以下同文 略式: combo_g

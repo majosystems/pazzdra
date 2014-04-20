@@ -3,6 +3,7 @@ module Pazzdra
   class Calc
     COMBO_UP_BASE = 0.25 # コンボ時の追加倍率（1コンボにつき）
     LENGTH_UP_BASE = 0.25 # 同時消しの長さによる増加率（1個につき）
+    DROP_PLUS_UP_BASE = 0.06 # 強化ドロップによる増加率（1個につき）
     DROP_COLORS = [:r,:g,:b,:y,:p,:h] # 色指定のsymbol定義
     attr_accessor :data
     class << Calc
@@ -46,11 +47,11 @@ module Pazzdra
           dragon = {}
           DROP_COLORS.each do |key|
             next unless val[key]
-            dragon[key] = Calc.cal attack_power_with_length_pct(val[key], key),
+            dragon[key] = Calc.cal attack_power_with_all_pct(val[key], key),
               @data[:leader], @data[:friend], @data[:skill], combo_up_pct
             next unless val[:sub]
             dragon[:sub] = {}
-            dragon[:sub][val[:sub]] = Calc.cal attack_power_with_length_pct((val[key].to_f / 2).to_i, val[:sub]),
+            dragon[:sub][val[:sub]] = Calc.cal attack_power_with_all_pct((val[key].to_f / 2).to_i, val[:sub]),
               @data[:leader], @data[:friend], @data[:skill], combo_up_pct
           end
           dragons.push(dragon)
@@ -86,9 +87,28 @@ module Pazzdra
       end
     end
 
-    # 繋げた長さを考慮したベース攻撃力
-    def attack_power_with_length_pct(base_power, color=nil)
-      base_power * length_up_pct(color)
+    # 繋げた長さと強化ドロップを考慮したベース攻撃力
+    def attack_power_with_all_pct(base_power, color=nil)
+      base_power * length_up_pct(color) * plus_up_pct(color)
+    end
+
+    # 強化ドロップによる加算倍率
+    def plus_up_pct(color=nil)
+      1 + (plus_count(color) * DROP_PLUS_UP_BASE)
+    end
+
+    # 強化ドロップの数
+    def plus_count(color=nil)
+      return 0 unless color
+      case @data[:plus_drop]
+      when Numeric
+        0
+      when Hash
+        return 0 unless @data[:plus_drop][color]
+        @data[:plus_drop][color]
+      else
+        0
+      end
     end
 
     # 繋げた長さによる加算倍率
