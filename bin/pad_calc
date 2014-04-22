@@ -25,6 +25,7 @@ EOS
   private
   def init
     @base = Pazzdra::Calc.new
+    @stamina_base = Pazzdra::Stamina.new
   end
 
   Pazzdra::Calc.DEFAULT_BASE.keys.each do |key|
@@ -59,6 +60,14 @@ EOS
       @base.data[:base][key-1] = val if val
       @base.data[:base][key-1]
     end
+  end
+
+  def stamina_base(val)
+    @stamina_base.base_stamina = val
+  end
+
+  def stamina(val=nil)
+    @stamina_base.stamina val
   end
 
   def show
