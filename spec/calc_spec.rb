@@ -51,7 +51,7 @@ describe Pazzdra::Calc, "攻撃力計算機能" do
       end
       it "ベースの色指定、コンボ色指定 複数" do
         @calc.merge({ base: [{r: 1000, sub: :r},{b: 1200, sub: :r}], leader: 2.5, combo: {r: [3], g: [3,4,4], b: [3] } })
-        should eq [{r: 5000, sub: {r: 2500}},{b: 6000, sub: {r: 3000}}]
+        should eq [{r: 5000, sub: {r: 500}},{b: 6000, sub: {r: 1800}}]
       end
       it "ベースの色指定、コンボ色指定 攻撃色が複数" do
         @calc.merge({ base: [{r: 1000}], leader: 2.5, combo: {r: [3, 3], g: [3,4], b: [3] } })
@@ -59,15 +59,15 @@ describe Pazzdra::Calc, "攻撃力計算機能" do
       end
       it "ベースの色指定、コンボ色指定 攻撃色が複数、長さ4越え" do
         @calc.merge({ base: [{g: 1200, sub: :g}], leader: 2.5, combo: {r: [3, 3], g: [3,4], b: [3] } })
-        should eq [{g: 13500, sub: {g: 6750}}]
+        should eq [{g: 13500, sub: {g: 1350}}]
       end
       it "ベースの色指定、コンボ色指定 攻撃色が複数、長さ4越え 複数" do
         @calc.merge({ base: [{g: 1200, sub: :g},{y: 1234, sub: :r}], leader: 2.5, friend: 2, skill: 1.5, combo: {r: [3, 3], g: [3,4], b: [3], y: [4, 6] } })
-        should eq [{g: 50625, sub: {g: 25313}},{y: 69413, sub: {r: 23138}}]
+        should eq [{g: 50625, sub: {g: 5063}},{y: 69413, sub: {r: 13875}}]
       end
       it "ベースの色指定、コンボ色指定 攻撃色が複数、長さ4越え 複数、強化ドロップあり" do
         @calc.merge({ base: [{g: 1200, sub: :g},{y: 1234, sub: :r}], leader: 2.5, friend: 2, skill: 1.5, combo: {r: [3, 3], g: [3,4], b: [3], y: [4, 6] }, plus_drop: {g: 4} })
-        should eq [{g: 62775, sub: {g: 31388}},{y: 69413, sub: {r: 23138}}]
+        should eq [{g: 62775, sub: {g: 6278}},{y: 69413, sub: {r: 13875}}]
       end
     end
   end

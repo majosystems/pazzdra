@@ -52,7 +52,9 @@ module Pazzdra
               @data[:leader], @data[:friend], @data[:skill], combo_up_pct
             next unless val[:sub]
             dragon[:sub] = {}
-            dragon[:sub][val[:sub]] = Calc.cal attack_power_with_all_pct((val[key].to_f / 2).to_i, val[:sub]),
+            attc_pct = 0.3
+            attc_pct = 0.1 if key == val[:sub]
+            dragon[:sub][val[:sub]] = Calc.cal attack_power_with_all_pct((val[key].to_f * attc_pct).to_i, val[:sub]),
               @data[:leader], @data[:friend], @data[:skill], combo_up_pct
           end
           dragons.push(dragon)
